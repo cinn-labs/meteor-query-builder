@@ -1,6 +1,6 @@
 Package.describe({
   name: 'cinn:query-builder',
-  version: '0.2.2',
+  version: '0.3.0',
   summary: 'Simple query generator for meteor apps',
   git: 'https://github.com/cinn-labs/meteor-query-builder',
   documentation: 'README.md'
