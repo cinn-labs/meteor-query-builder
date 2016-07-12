@@ -21,6 +21,7 @@ class CursorBuilder {
     this.sorts = this.sorts.bind(this);
     this.options = this.options.bind(this);
     this.cursor = this.cursor.bind(this);
+    this.findOne = this.findOne.bind(this);
     this.loads = this.loads.bind(this);
   }
 
@@ -88,13 +89,27 @@ class CursorBuilder {
   options(params) { return this.mergeToStackAndReturnSelf(this.optionsStack, params); }
   forceTrash() { return this.mergeToStackAndReturnSelf(this.optionsStack, { forceTrash: true }); }
 
-  cursor() {
-    const { collection } = this.collectionHandler;
+  getFindParams() {
     const options = _.merge(this.optionsStack, { fields: this.fieldsStack, sort: this.sortsStack });
     if(!!this.limitValue) options.limit = this.limitValue;
     if(!!this.skipValue) options.skip = this.skipValue;
     const query = this.selectorsStack;
-    return collection.find(query, options);
+    return [query, options];
+  }
+
+  cursor() {
+    const { collection } = this.collectionHandler;
+    return collection.find(...this.getFindParams());
+  }
+
+  fetch() {
+    const { collection } = this.collectionHandler;
+    return collection.find(...this.getFindParams()).fetch();
+  }
+
+  findOne() {
+    const { collection } = this.collectionHandler;
+    return collection.findOne(...this.getFindParams());
   }
 }
 
